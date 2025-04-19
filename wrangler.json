@@ -1,0 +1,16 @@
+{
+  "compatibility_date": "2025-04-01",
+  "main": "src/index.ts",
+  "name": "jorts",
+  "upload_source_maps": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "5bf043e5-29ce-4fcf-9bd8-49f2d49da2e1",
+      "database_name": "jorts-db"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
