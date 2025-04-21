@@ -17,11 +17,13 @@ export function renderHtml(content: string) {
           <h1>🎉 Successfully connected jorts to D1</h1>
         </header>
         <main>
+          <form action="/submit" method="POST">
+            <input type="text" name="short_id" placeholder="short_id" required>
+            <input type="text" name="long_url" placeholder="long_url" required>
+            <button type="submit">Submit</button>
+          </form>
           <p>Your D1 Database contains the following data:</p>
-          <pre><code><span style="color: #0E838F">&gt; </span>SELECT * FROM comments LIMIT 3;<br>${content}</code></pre>
-          <small class="blue">
-            <a target="_blank" href="https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/">Build a comments API with Workers and D1</a>
-          </small>
+          <pre><code><span style="color: #0E838F">&gt; </span>SELECT * FROM comments;<br>${content}</code></pre>
         </main>
       </body>
     </html>

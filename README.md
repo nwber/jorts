@@ -4,6 +4,12 @@
 
 ![Worker + D1 Template Preview](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/cb7cb0a9-6102-4822-633c-b76b7bb25900/public)
 
+## Cloudflare, D1, and limitations
+
+Using D1 for this since it's easy and performant. It's basically SQLite under the hood and SQLite is the bomb diggity. 
+
+D1 has a maximum size of 10GB. SQLite types have pretty variable sizes: INTEGER can be 0-8 bytes, TEXT is just encoded and can be up to 1GB, etc. Supposing ...
+
 <!-- dash-content-start -->
 
 D1 is Cloudflare's native serverless SQL database ([docs](https://developers.cloudflare.com/d1/)). This project demonstrates using a Worker with a D1 binding to execute a SQL statement. A simple frontend displays the result of this query:
