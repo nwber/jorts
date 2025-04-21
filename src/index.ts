@@ -29,6 +29,7 @@ export default {
       const short_id = randomHex;
       
       // Insert valid short_id and validated long_url into D1 table
+      // TODO: use Sessions API below to take advantage of D1 read replicas
       if (short_id) {
         // Insert the new URL into the database
         const stmt = env.DB.prepare("INSERT INTO urls (short_id, long_url) VALUES (?, ?)");

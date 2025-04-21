@@ -1,14 +1,12 @@
-# Worker + D1 Database
-
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/jorts)
-
-![Worker + D1 Template Preview](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/cb7cb0a9-6102-4822-633c-b76b7bb25900/public)
+# Jorts - a url jortener
 
 ## Cloudflare, D1, and limitations
 
 Using D1 for this since it's easy and performant. It's basically SQLite under the hood and SQLite is the bomb diggity. 
 
-D1 has a maximum size of 10GB. SQLite types have pretty variable sizes: INTEGER can be 0-8 bytes, TEXT is just encoded and can be up to 1GB, etc. Supposing ...
+D1 has a maximum size of 10GB. SQLite types have pretty variable sizes: INTEGER can be 0-8 bytes, TEXT is just encoded and can be up to 1GB, etc. 
+
+If `short_id` is 5 UTF-8 characters and the average `long_url` is 100 UTF-8 characters, 
 
 <!-- dash-content-start -->
 

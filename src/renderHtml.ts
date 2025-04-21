@@ -5,7 +5,7 @@ export function renderHtml(content: string) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>D1</title>
+        <title>jorts.zip</title>
         <link rel="stylesheet" type="text/css" href="https://static.integrations.cloudflare.com/styles.css">
       </head>
     
@@ -14,11 +14,11 @@ export function renderHtml(content: string) {
           <img
             src="https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/30e0d3f6-6076-40f8-7abb-8a7676f83c00/public"
           />
-          <h1>🎉 Successfully connected jorts to D1</h1>
+          <h1>👖 Welcome to jorts 👖</h1>
+          <h3>Enter a url below, and jorts will shorten it for you!</h3>
         </header>
         <main>
           <form action="/submit" method="POST">
-            <input type="text" name="short_id" placeholder="short_id" required>
             <input type="text" name="long_url" placeholder="long_url" required>
             <button type="submit">Submit</button>
           </form>
