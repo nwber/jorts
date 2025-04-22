@@ -2,7 +2,64 @@ import { renderHtml } from "./renderHtml";
 
 export default {
   async fetch(request, env) {
-    const stmt = env.DB.prepare("SELECT * FROM comments LIMIT 3");
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // Handle POST request for form submission
+    if (request.method === "POST" && path === "/submit") {
+      const formData = await request.formData();
+      //const short_id = formData.get("short_id");
+      const long_url = formData.get("long_url") as string;
+
+      // Check if long_url is valid
+      // Prefix 'https' if missing
+      let validatedUrl = long_url;
+      if (!validatedUrl.startsWith('https://')) {
+        validatedUrl = 'https://' + validatedUrl;
+      }
+
+      try {
+        new URL(validatedUrl);
+      } catch {
+        return new Response('Invalid URL provided', { status: 400 });
+      }
+
+      // Generate random hex string, up to 5 chars
+      const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
+      const short_id = randomHex;
+      
+      // Insert valid short_id and validated long_url into D1 table
+      // TODO: use Sessions API below to take advantage of D1 read replicas
+      if (short_id) {
+        // Insert the new URL into the database
+        const stmt = env.DB.prepare("INSERT INTO urls (short_id, long_url) VALUES (?, ?)");
+        await stmt.bind(short_id, validatedUrl).run();
+      }
+      
+      // Redirect back to the main page
+      return Response.redirect(new URL(request.url).origin, 302);
+    }
+
+    // Handle dynamic short_id paths
+    if (path !== "/" && path !== "/submit") {
+      // Extract short_id from path (remove leading slash)
+      const short_id = path.substring(1);
+      
+      // Query the database for the long_url
+      const stmt = env.DB.prepare("SELECT long_url FROM urls WHERE short_id = ?");
+      const { results } = await stmt.bind(short_id).all();
+      
+      if (results && results.length > 0) {
+        // Redirect to the long_url
+        return Response.redirect(results[0].long_url as string, 302);
+      } else {
+        // Short ID not found
+        return new Response('Short URL not found', { status: 404 });
+      }
+    }
+
+    // Handle GET request for the main page
+    const stmt = env.DB.prepare("SELECT * FROM urls");
     const { results } = await stmt.all();
 
     return new Response(renderHtml(JSON.stringify(results, null, 2)), {

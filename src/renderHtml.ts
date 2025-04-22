@@ -5,7 +5,7 @@ export function renderHtml(content: string) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>D1</title>
+        <title>jorts.zip</title>
         <link rel="stylesheet" type="text/css" href="https://static.integrations.cloudflare.com/styles.css">
       </head>
     
@@ -14,14 +14,16 @@ export function renderHtml(content: string) {
           <img
             src="https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/30e0d3f6-6076-40f8-7abb-8a7676f83c00/public"
           />
-          <h1>🎉 Successfully connected jorts to D1</h1>
+          <h1>👖 Welcome to jorts 👖</h1>
+          <h3>Enter a url below, and jorts will shorten it for you!</h3>
         </header>
         <main>
+          <form action="/submit" method="POST">
+            <input type="text" name="long_url" placeholder="long_url" required>
+            <button type="submit">Submit</button>
+          </form>
           <p>Your D1 Database contains the following data:</p>
-          <pre><code><span style="color: #0E838F">&gt; </span>SELECT * FROM comments LIMIT 3;<br>${content}</code></pre>
-          <small class="blue">
-            <a target="_blank" href="https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/">Build a comments API with Workers and D1</a>
-          </small>
+          <pre><code><span style="color: #0E838F">&gt; </span>SELECT * FROM comments;<br>${content}</code></pre>
         </main>
       </body>
     </html>
