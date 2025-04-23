@@ -1,4 +1,5 @@
 import { renderHtml } from "./renderHtml";
+import { renderErrorPage } from "./errorPage";
 
 export default {
   async fetch(request, env) {
@@ -8,7 +9,6 @@ export default {
     // Handle POST request for form submission
     if (request.method === "POST" && path === "/submit") {
       const formData = await request.formData();
-      //const short_id = formData.get("short_id");
       const long_url = formData.get("long_url") as string;
 
       // Check if long_url is valid
@@ -20,8 +20,14 @@ export default {
 
       try {
         new URL(validatedUrl);
-      } catch {
-        return new Response('Invalid URL provided', { status: 400 });
+      } catch (error) {
+        return new Response(renderErrorPage(
+          'Invalid URL provided. Please make sure to enter a valid URL.',
+          error instanceof Error ? error.message : String(error)
+        ), {
+          headers: { "content-type": "text/html" },
+          status: 400
+        });
       }
 
       // Generate random hex string, up to 5 chars
@@ -51,10 +57,27 @@ export default {
       
       if (results && results.length > 0) {
         // Redirect to the long_url
-        return Response.redirect(results[0].long_url as string, 302);
+        try {
+          return Response.redirect(results[0].long_url as string, 302);
+        } catch (error) {
+          console.error(`Error accessing the url ${results[0].long_url}: ${error}`);
+          return new Response(renderErrorPage(
+            'Received an error redirecting to your jortened url.',
+            error instanceof Error ? error.message : String(error)
+          ), {
+            headers: { "content-type": "text/html" },
+            status: 404
+          });
+        }
       } else {
         // Short ID not found
-        return new Response('Short URL not found', { status: 404 });
+        return new Response(renderErrorPage(
+          'The short URL you are looking for does not exist.',
+          `Short ID "${short_id}" was not found in the database.`
+        ), {
+          headers: { "content-type": "text/html" },
+          status: 404
+        });
       }
     }
 
