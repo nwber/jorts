@@ -15,5 +15,8 @@
   },
   "placement": {
     "mode": "smart"
+  },
+  "assets": {
+    "directory": "./src/img"
   }
 }
