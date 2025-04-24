@@ -11,19 +11,18 @@ export function renderHtml(content: string) {
     
       <body>
         <header>
+          <h1>👖 Welcome to jorts 👖</h1>
           <img
             src="/jorts.jpg" alt="picture of some jorts"
           />
-          <h1>👖 Welcome to jorts 👖</h1>
           <h3>Enter a url below, and jorts will jorten it for you!</h3>
         </header>
         <main>
           <form action="/submit" method="POST">
-            <input type="text" name="long_url" placeholder="long_url" required>
+            <input type="text" name="long_url" placeholder="https://jorts.zip" required>
             <button type="submit">Submit</button>
           </form>
-          <p>Your D1 Database contains the following data:</p>
-          <pre><code><span style="color: #0E838F">&gt; </span>SELECT * FROM comments;<br>${content}</code></pre>
+          <pre>${content}</pre>
         </main>
       </body>
     </html>

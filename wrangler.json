@@ -18,5 +18,11 @@
   },
   "assets": {
     "directory": "./src/img"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "jorts.zip",
+      "custom_domain": true
+    }
+  ]
 }

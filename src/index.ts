@@ -6,6 +6,10 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // Generate random hex string, up to 5 chars
+    const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
+    const short_id = randomHex;
+
     // Handle POST request for form submission
     if (request.method === "POST" && path === "/submit") {
       const formData = await request.formData();
@@ -31,8 +35,8 @@ export default {
       }
 
       // Generate random hex string, up to 5 chars
-      const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
-      const short_id = randomHex;
+      // const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
+      // var short_id = randomHex;
       
       // Insert valid short_id and validated long_url into D1 table
       // TODO: use Sessions API below to take advantage of D1 read replicas
@@ -82,10 +86,13 @@ export default {
     }
 
     // Handle GET request for the main page
-    const stmt = env.DB.prepare("SELECT * FROM urls");
-    const { results } = await stmt.all();
+    // const stmt = env.DB.prepare("SELECT * FROM urls ");
+    // const { results } = await stmt.all();
 
-    return new Response(renderHtml(JSON.stringify(results, null, 2)), {
+    const resp = `Success! Jorted your url, available at https://jorts.zip/${short_id}`
+
+    // return new Response(renderHtml(JSON.stringify(results, null, 2)), {
+    return new Response(renderHtml(resp), {
       headers: {
         "content-type": "text/html",
       },
