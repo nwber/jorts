@@ -12,18 +12,23 @@ export function renderHtml(content: string) {
     
       <body>
         <header>
-          <h1>👖 Welcome to jorts 👖</h1>
+          <h1><a href="/">👖 Welcome to jorts 👖</a></h1>
           <img
             src="/jorts.jpg" alt="picture of some jorts"
           />
           <h3>Enter a url below, and jorts will jorten it for you!</h3>
         </header>
         <main>
+          ${content ? `
+            <div class="result">
+              Success! Jortened your url: <a href="${content}" target="_blank" rel="noopener noreferrer">${content}</a>
+              <button class="copy-button" onclick="navigator.clipboard.writeText('${content}')">Copy</button>
+            </div>
+          ` : ''}
           <form action="/submit" method="POST">
             <input type="text" name="long_url" placeholder="https://jorts.zip" required>
             <button type="submit">Submit</button>
           </form>
-          ${content ? `<p>Your shortened URL: ${content}</p>` : ''}
         </main>
         <footer>
           <a href="https://github.com/nwber/jorts" target="_blank" rel="noopener noreferrer" class="github-link">

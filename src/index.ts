@@ -91,7 +91,7 @@ export default {
     // Only show success message if we're coming from a successful submission
     const short_id = url.searchParams.get('short_id');
     const successMessage = url.searchParams.get('success') === 'true' && short_id
-      ? `Success! Jortened your url, available at https://jorts.zip/${short_id}`
+      ? `https://jorts.zip/${short_id}`
       : '';
 
     return new Response(renderHtml(successMessage), {
