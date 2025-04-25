@@ -2,7 +2,7 @@ export const renderErrorPage = (errorMessage: string, errorDetails?: string) => 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Error - URL Shortener</title>
+    <title>Error - Jorts</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;

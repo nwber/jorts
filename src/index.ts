@@ -6,10 +6,6 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Generate random hex string, up to 5 chars
-    const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
-    const short_id = randomHex;
-
     // Handle POST request for form submission
     if (request.method === "POST" && path === "/submit") {
       const formData = await request.formData();
@@ -35,8 +31,7 @@ export default {
       }
 
       // Generate random hex string, up to 5 chars
-      // const randomHex = Math.random().toString(16).substring(2, 7).toUpperCase();
-      // var short_id = randomHex;
+      const short_id = Math.random().toString(16).substring(2, 7).toUpperCase();
       
       // Insert valid short_id and validated long_url into D1 table
       // TODO: use Sessions API below to take advantage of D1 read replicas
@@ -46,8 +41,12 @@ export default {
         await stmt.bind(short_id, validatedUrl).run();
       }
       
-      // Redirect back to the main page
-      return Response.redirect(new URL(request.url).origin, 302);
+      // Redirect back to the main page with success parameter
+      const redirectUrl = new URL(request.url);
+      redirectUrl.pathname = '/';
+      redirectUrl.searchParams.set('success', 'true');
+      redirectUrl.searchParams.set('short_id', short_id);
+      return Response.redirect(redirectUrl.toString(), 302);
     }
 
     // Handle dynamic short_id paths
@@ -89,10 +88,13 @@ export default {
     // const stmt = env.DB.prepare("SELECT * FROM urls ");
     // const { results } = await stmt.all();
 
-    const resp = `Success! Jorted your url, available at https://jorts.zip/${short_id}`
+    // Only show success message if we're coming from a successful submission
+    const short_id = url.searchParams.get('short_id');
+    const successMessage = url.searchParams.get('success') === 'true' && short_id
+      ? `Success! Jortened your url, available at https://jorts.zip/${short_id}`
+      : '';
 
-    // return new Response(renderHtml(JSON.stringify(results, null, 2)), {
-    return new Response(renderHtml(resp), {
+    return new Response(renderHtml(successMessage), {
       headers: {
         "content-type": "text/html",
       },
