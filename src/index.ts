@@ -5,6 +5,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
+    var short_id: string | null = 'emptyString'
 
     // Handle POST request for form submission
     if (request.method === "POST" && path === "/submit") {
@@ -30,22 +31,30 @@ export default {
         });
       }
 
-      // Generate random hex string, up to 5 chars
-      const short_id = Math.random().toString(16).substring(2, 7).toUpperCase();
+      var short_id: string | null = Math.random().toString(16).substring(2, 7).toUpperCase(); 
       
       // Insert valid short_id and validated long_url into D1 table
-      // TODO: use Sessions API below to take advantage of D1 read replicas
       if (short_id) {
         // Insert the new URL into the database
+        console.log(`Inserting ${short_id} mapped to ${long_url}`)
         const stmt = env.DB.prepare("INSERT INTO urls (short_id, long_url) VALUES (?, ?)");
-        await stmt.bind(short_id, validatedUrl).run();
+        try {
+          await stmt.bind(short_id, validatedUrl).run();
+        }
+        catch (error) {
+          if (error === "Error: D1_ERROR: UNIQUE constraint failed: urls.short_id: SQLITE_CONSTRAINT") {
+            console.log(`short_id record ${short_id} already exists for ${long_url}.`)
+          }
+        }
       }
       
       // Redirect back to the main page with success parameter
       const redirectUrl = new URL(request.url);
       redirectUrl.pathname = '/';
       redirectUrl.searchParams.set('success', 'true');
-      redirectUrl.searchParams.set('short_id', short_id);
+      if (short_id) {
+        redirectUrl.searchParams.set('short_id', short_id);
+      }
       return Response.redirect(redirectUrl.toString(), 302);
     }
 
@@ -61,6 +70,7 @@ export default {
       if (results && results.length > 0) {
         // Redirect to the long_url
         try {
+          console.log(`Redirected from path ${short_id} to ${results[0].long_url}`)
           return Response.redirect(results[0].long_url as string, 302);
         } catch (error) {
           console.error(`Error accessing the url ${results[0].long_url}: ${error}`);
@@ -75,8 +85,8 @@ export default {
       } else {
         // Short ID not found
         return new Response(renderErrorPage(
-          'The short URL you are looking for does not exist.',
-          `Short ID "${short_id}" was not found in the database.`
+          'The path you are looking for does not exist.',
+          `The path /${short_id} was not found.`
         ), {
           headers: { "content-type": "text/html" },
           status: 404
@@ -84,12 +94,8 @@ export default {
       }
     }
 
-    // Handle GET request for the main page
-    // const stmt = env.DB.prepare("SELECT * FROM urls ");
-    // const { results } = await stmt.all();
-
     // Only show success message if we're coming from a successful submission
-    const short_id = url.searchParams.get('short_id');
+    short_id = url.searchParams.get('short_id');
     const successMessage = url.searchParams.get('success') === 'true' && short_id
       ? `https://jorts.zip/${short_id}`
       : '';

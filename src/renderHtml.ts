@@ -12,11 +12,11 @@ export function renderHtml(content: string) {
     
       <body>
         <header>
-          <h1><a href="/">👖 Welcome to jorts 👖</a></h1>
+          <h1><a href="/">👖 Welcome to Jorts 👖</a></h1>
           <img
             src="/jorts.jpg" alt="picture of some jorts"
           />
-          <h3>Enter a url below, and jorts will jorten it for you!</h3>
+          <h3>Enter a url below, and Jorts will jorten it for you!</h3>
         </header>
         <main>
           ${content ? `
@@ -26,7 +26,8 @@ export function renderHtml(content: string) {
             </div>
           ` : ''}
           <form action="/submit" method="POST">
-            <input type="text" name="long_url" placeholder="https://jorts.zip" required>
+            <input type="text" name="long_url" placeholder="https://jorts.zip | jorts.zip" required>
+            <br>
             <button type="submit">Submit</button>
           </form>
         </main>

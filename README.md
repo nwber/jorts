@@ -2,6 +2,13 @@
 
 ![](https://api.checklyhq.com/v1/badges/checks/9c2ade5d-0200-4b76-b54e-8ccbe4760796?style=flat&theme=dark)
 
+## TO DO
+
+- Use D1 sessions API to take advantage of RRs.
+- Write tests (yawn).
+- Create QR code for links.
+- Do not duplicate existing records (when a record exists for `cnn.com`, fetch the short_id and return that instead of generating a new one).
+
 ## How it works
 
 `jorts` takes a url (may be invalid) and stores it in Cloudflare D1 with a random 5 character hex string. Visiting `https://jorts.zip/<hex>` will redirect to the corresponding url. 
